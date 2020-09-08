@@ -165,7 +165,8 @@ export default class Category extends Component {
     });
     // 准备数据
     const categoryId = this.category._id;
-    const categoryName = this.form.current.getFieldValue('categoryName')
+    const categoryName = this.form.current.getFieldValue('categoryName');
+    console.log(this.form.current);
     // 清除输入数据
     this.form.current.resetFields();
     // 2.发送请求更新分类
@@ -232,7 +233,6 @@ export default class Category extends Component {
           onOk={this.updateCategorys}
           onCancel={this.handleCancel}
         >
-
           <UpdateForm categoryName={category.name}
                       setForm={(form) => {
                         this.form = form
@@ -242,11 +242,4 @@ export default class Category extends Component {
       </div>
     )
   }
-
 }
-
-
-
-
-
-

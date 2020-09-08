@@ -28,7 +28,7 @@ export default class UpdateForm extends React.Component {
         <Form.Item
           name="categoryName"
           label="分类名称"
-          defaultValue={categoryName}
+          initialValue={categoryName}
           rules={[{required: true, whitespace: true, message: '请输入分类名称'}]}
         >
           <Input placeholder={'请输入分类名称'}/>
