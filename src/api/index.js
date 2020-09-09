@@ -6,6 +6,7 @@
 
 import ajax from './ajax';
 import jsonp from "jsonp";
+import product from "../pages/product/product";
 
 const BASE = '';
 
@@ -45,7 +46,7 @@ export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/l
 export const reqUpdateStatus = (productId, status) => ajax(BASE + '/manage/product/updateStatus', {
   productId,
   status
-}, 'POST')
+}, 'POST');
 
 
 /*
@@ -60,7 +61,14 @@ export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) =
   }
 );
 
+// 删除指定商品名称的图片
 export const reqDeleteImg = (name) => ajax(BASE + '/manage/img/delete', {name}, 'POST');
+
+// 添加/修改商品
+export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + (product._id ? 'update' : 'add'), product, 'POST');
+
+// 修改商品
+// export const reqUpdateProduct=(product)=>ajax(BASE+'/manage/product/update',product,'POST');
 
 // 获取天气信息
 export const reqWeather = (city) => {

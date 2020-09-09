@@ -44,13 +44,8 @@ export default class ProductDetail extends Component {
   render() {
 
     // 读取携带过来的state数据
-    // const {name, desc, price, detail, imgs} = this.props.location.state.product;
-    const name = '';
-    const desc = '';
-    const price = '';
-    const detail = '';
-    const imgs = [];
-    console.log(this.props.location);
+    console.log('asdasdasd',this.props.location.state);
+    const {name, desc, price, detail, imgs} = this.props.location.state.product;
 
     const {cName1, cName2} = this.state;
 

@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {Card, Form, Input, Cascader, Upload, Button} from "antd";
+import {Card, Form, Input, Cascader, Upload, Button, message} from "antd";
 
 import LinkButton from "../../components/link-button";
 import ArrowLeftOutlined from "@ant-design/icons/lib/icons/ArrowLeftOutlined";
-import {reqCategorys} from "../../api";
+import {reqCategorys, reqAddOrUpdateProduct} from "../../api";
 import PicturesWall from './pictures-wall';
 import RichTextEditor from "./rich-text-editor";
 
@@ -35,7 +35,7 @@ export default class ProductAddUpdate extends Component {
     super(props);
 
     // 创建用来保存ref标识的标签对象容器
-    this.pw=React.createRef()
+    this.pw = React.createRef()
   }
 
   initOptions = async (categorys) => {
@@ -48,7 +48,7 @@ export default class ProductAddUpdate extends Component {
 
     // 如果是一个二级分类的商品的更新
     const {isUpdate, product} = this;
-    const {pCategoryId, categoryId} = product
+    const {pCategoryId, categoryId} = product;
 
     if (isUpdate && pCategoryId !== '0') {
       // 获取响应的二级分类列表
@@ -125,10 +125,34 @@ export default class ProductAddUpdate extends Component {
 
   submit = () => {
     // 进行表单验证，如果通过了，才发送请求
-    this.formRef.current.validateFields().then(value => {
-      console.log(value);
-      const imgs=this.pw.current.getIMgs();
-      console.log(imgs)
+    this.formRef.current.validateFields().then(async value => {
+      // 1.收集数据封装成product对象
+      console.log('++++++',value);
+      const {name, desc, price, categoryIds} = value;
+      let pCategoryId, categoryId;
+      if (categoryIds.length === 1) {
+        pCategoryId = '0';
+        categoryId = categoryIds[0];
+      } else {
+        pCategoryId = categoryIds[0];
+        categoryId = categoryIds[1];
+      }
+      const imgs = this.pw.current.getIMgs();
+      const product = {name, desc, price, imgs,pCategoryId,categoryId};
+
+      // 如果是更新，需要添加_id
+      if (this.isUpdate) {
+        product._id = this.product._id;
+      }
+      // 2.调用接口请求函数添加/更新
+      const result=await reqAddOrUpdateProduct(product);
+      // 3.根据结果提示
+      if (result.data.status===0){
+        message.success(`${this.isUpdate?'更新':'添加'}商品成功！`);
+        this.props.history.goBack()
+      }else{
+        message.error(`${this.isUpdate?'更新':'添加'}商品失败！`)
+      }
     }).catch(err => {
       alert('失败')
     })
@@ -161,7 +185,7 @@ export default class ProductAddUpdate extends Component {
   render() {
 
     const {isUpdate, product} = this;
-    const {pCategoryId, categoryId,imgs} = product;
+    const {pCategoryId, categoryId, imgs} = product;
 
     // 用来接收级联分类ID的数组
     const categoryIds = [];
@@ -239,10 +263,10 @@ export default class ProductAddUpdate extends Component {
           </Item>
           <Item
             label='商品详情'
-            labelCol={{span:2}}
-            wrapperCol={{span:20}}
+            labelCol={{span: 2}}
+            wrapperCol={{span: 20}}
           >
-            {/*<RichTextEditor/>*/}
+            <RichTextEditor/>
           </Item>
           <Item>
             <Button type={'primary'} onClick={this.submit}>提交</Button>

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Card, Select, Input, Button, Table, message} from "antd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-
+import {withRouter} from 'react-router-dom';
 
 import LinkButton from "../../components/link-button";
 import {reqProducts, reqSearchProducts, reqUpdateStatus} from "../../api/index";
@@ -9,6 +9,7 @@ import {PAGE_SIZE} from "../../utils/constants";
 import product from "./product";
 
 const {Option} = Select;
+
 /*
 * Product默认子路由组件
 * */
@@ -59,12 +60,12 @@ export default class ProductHome extends Component {
       {
         width: 100,
         title: '操作',
-        render: (products) => {
+        render: (product) => {
           return (
             <span>
               {/*将product对象使用state传递给目标路由组件*/}
               <LinkButton onClick={() => this.props.history.push('/product/detail', {product})}>详情</LinkButton>
-              <LinkButton onClick={()=>this.props.history.push('/product/addupdate',product)}>修改</LinkButton>
+              <LinkButton onClick={() => this.props.history.push('/product/addupdate', product)}>修改</LinkButton>
             </span>
           )
         }
@@ -87,7 +88,7 @@ export default class ProductHome extends Component {
     }
     this.setState({loading: false});   //隐藏loading
     const res = result.data;
-    console.log(res);
+    // console.log(res);
     if (res.status === 0) {
       // 取出分页数据，更新状态，显示分页列表
       const {total, list} = res.data;
@@ -100,8 +101,9 @@ export default class ProductHome extends Component {
 
   // 更新指定商品的状态
   updateStatus = async (productID, status) => {
-    const result = await reqUpdateStatus(productID, status).data;
-    if (result.status === 0) {
+    const result = await reqUpdateStatus(productID, status);
+    const res=result.data;
+    if (res.status === 0) {
       message.success('更新商品成功');
       this.getProducts(this.pageNum);
     }
@@ -139,7 +141,7 @@ export default class ProductHome extends Component {
       </span>
     );
     const extra = (
-      <Button type={"primary"} onClick={()=>this.props.history.push('/product/addupdate')}>
+      <Button type={"primary"} onClick={() => this.props.history.push('/product/addupdate')}>
         <PlusOutlined/> 添加商品
       </Button>
     );
