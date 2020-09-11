@@ -16,10 +16,6 @@ const BASE = '';
 // }
 export const reqLogin = (username, password) => ajax(BASE + '/login', {username, password}, 'POST');
 
-
-// 添加用户
-export const reqAddUser = (user) => ajax(BASE + '/manage/user/add', user, 'POST');
-
 // 获取一级/二级分类列表
 export const reqCategorys = (parentId) => ajax(BASE + '/manage/category/list', {parentId});
 
@@ -69,6 +65,26 @@ export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/'
 
 // 修改商品
 // export const reqUpdateProduct=(product)=>ajax(BASE+'/manage/product/update',product,'POST');
+
+// 获取所有角色列表
+export const reqRoles = () => ajax(BASE + '/manage/role/list');
+
+// 添加角色
+export const reqAddRole = (roleName) => ajax(BASE + '/manage/role/add', {roleName}, 'POST');
+
+// 修改角色权限
+export const reqUpdateRole = (role) => ajax(BASE + '/manage/role/update', role, 'POST');
+
+// 获取所有用户列表
+export const reqUsers = () => ajax(BASE + '/manage/user/list');
+
+
+// 添加/更新用户
+export const reqAddOrUpdateUser = (user) => ajax(BASE + '/manage/user/' + (user._id ? 'update' : 'add'), user, 'POST');
+
+// 删除指定用户
+export const reqDeleteUsers = (userId) => ajax(BASE + '/manage/user/delete', {userId}, "POST");
+
 
 // 获取天气信息
 export const reqWeather = (city) => {
