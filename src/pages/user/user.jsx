@@ -156,7 +156,6 @@ export default class User extends  PureComponent {
           onOk={this.addOrUpdateUser}
           onCancel={() => {
             this.form.current.resetFields();
-
             this.setState({isShow: false});
           }}
         >

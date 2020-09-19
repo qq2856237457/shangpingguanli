@@ -1,12 +1,10 @@
 import React, {Component} from "react";
 import {Card, Select, Input, Button, Table, message} from "antd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import {withRouter} from 'react-router-dom';
 
 import LinkButton from "../../components/link-button";
 import {reqProducts, reqSearchProducts, reqUpdateStatus} from "../../api/index";
 import {PAGE_SIZE} from "../../utils/constants";
-import product from "./product";
 
 const {Option} = Select;
 
@@ -88,7 +86,7 @@ export default class ProductHome extends Component {
     }
     this.setState({loading: false});   //隐藏loading
     const res = result.data;
-    console.log(res);
+    // console.log(res);
     if (res.status === 0) {
       // 取出分页数据，更新状态，显示分页列表
       const {total, list} = res.data;
@@ -154,6 +152,7 @@ export default class ProductHome extends Component {
           dataSource={products}
           columns={this.columns}
           pagination={{
+            current:this.pageNum,
             total,
             defaultPageSize: PAGE_SIZE,
             showQuickJumper: true,

@@ -24,7 +24,7 @@ export default class Login extends Component {
         message.success('登录成功！');
         const user = result.data;
         memoryUtils.user = user;
-        storageUtils.saveUser(user)
+        storageUtils.saveUser(user);
         this.props.history.replace('/')
       } else {
         message.error(result.msg)

@@ -7,6 +7,7 @@ import AddForm from './add-form';
 import AuthForm from "./auth-form";
 import memoryUtils from "../../utils/memoryUtils";
 import {formateDate} from '../../utils/dateUtils'
+import storageUtils from "../../utils/storageUtils";
 
 /*
 * 角色路由
@@ -45,12 +46,12 @@ export default class Role extends Component {
       {
         title: '创建时间',
         dataIndex: 'create_time',
-        render:formateDate
+        render: formateDate
       },
       {
         title: '授权时间',
         dataIndex: 'auth_time',
-        render:formateDate
+        render: formateDate
       },
       {
         title: '授权人',
@@ -85,19 +86,14 @@ export default class Role extends Component {
       const res = result.data;
       // console.log(res)
       if (res.status === 0) {
-        message.success('添加角色成功');
+
         // 更新roles状态
         const role = res.data;
-        // const roles = [...this.state.roles];
-        // roles.push(role);
-        // this.setState({roles});
-
+        message.success('添加角色成功');
         // 根据原本数据更新roles状态，函数的方法改变状态
         this.setState(state => ({
           roles: [...state.roles, role]
-        }))
-
-
+        }));
       } else {
         message.error('添加角色失败');
       }
@@ -125,11 +121,21 @@ export default class Role extends Component {
     const res = result.data;
 
     if (res.status === 0) {
-      message.success("设置角色权限成功");
 
-      this.setState({
-        roles: [...this.state.roles]
-      })
+      if (role._id === memoryUtils.user.role_id) {
+        // 如果当前更新的是自己角色权限，强制退出
+        // 清除数据
+        message.success('当前用户角色权限修改了，请重新登录');
+        memoryUtils.user = {};
+        storageUtils.removeUser();
+        this.props.history.replace('/login');
+      } else {
+        message.success("设置角色权限成功");
+        this.setState({
+          roles: [...this.state.roles]
+        })
+      }
+
 
     }
   };
@@ -172,7 +178,15 @@ export default class Role extends Component {
           dataSource={roles}
           columns={this.columns}
           pagination={{defaultPageSize: PAGE_SIZE}}
-          rowSelection={{type: 'radio', selectedRowKeys: [role._id]}}
+          rowSelection={{
+            type: 'radio',
+            selectedRowKeys: [role._id],
+            onSelect: (role) => {
+              this.setState({
+                role
+              })
+            }
+          }}
           onRow={this.onRow}
         />
         <Modal

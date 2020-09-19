@@ -19,7 +19,6 @@ export default class UserForm extends React.PureComponent {
   render() {
 
     const {roles,user} = this.props;
-
     const formItemLayout = {
       labelCol: {span: 4},  //左侧label的宽度
       wrapperCol: {span: 20},// 右侧包裹的宽度
